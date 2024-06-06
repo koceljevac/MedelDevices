@@ -53,5 +53,6 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
         label = {
             Text(tab.options.title)
         }
+
     )
 }
