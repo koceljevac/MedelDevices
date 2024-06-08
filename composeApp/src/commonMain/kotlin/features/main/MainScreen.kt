@@ -1,10 +1,14 @@
 package features.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
@@ -14,7 +18,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import features.main.calendar.presentation.screens.CalendarScreen
 import features.main.favorites.presentation.screens.FavoritesScreen
-import features.main.home.presentation.HomeScreen
+import features.main.home.presentation.screens.HomeScreen
 import features.main.profile.presentation.screens.ProfileScreen
 
 class MainScreen : Screen {

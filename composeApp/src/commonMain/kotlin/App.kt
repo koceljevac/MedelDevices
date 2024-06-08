@@ -1,20 +1,21 @@
-
-import androidx.compose.runtime.*
-
+import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import com.example.compose.AppTheme
-import features.auth.presentation.screens.LoginScreen
-import features.auth.presentation.screens.RegistrationScreen
 import features.main.MainScreen
-
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
+import org.koin.compose.KoinContext
 
 
 @Composable
-@Preview
 fun App() {
+    KoinContext {
+        initialScreen()
+    }
+}
+
+
+@Composable
+fun initialScreen() {
     AppTheme {
-        Navigator(screen = MainScreen())
+        Navigator(MainScreen())
     }
 }
