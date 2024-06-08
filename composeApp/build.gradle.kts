@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,6 +6,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinSerilazable)
+
 }
 
 kotlin {
@@ -33,6 +34,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -44,6 +48,24 @@ kotlin {
             implementation(libs.voyager)
             implementation(libs.voyager.tabs)
             implementation(libs.voyager.transition)
+            implementation(libs.kamel)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.serialization)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.koin.core)
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.view.model)
+            implementation(libs.compose.ui)
+
+
+//            implementation(libs.koin.ktor)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
 
         }
     }
@@ -87,5 +109,7 @@ android {
 }
 dependencies {
     implementation(libs.androidx.material3.android)
+
 }
+task("testClasses")
 
