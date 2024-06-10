@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import features.main.calendar.presentation.screens.CalendarScreen
 import features.main.favorites.presentation.screens.FavoritesScreen
 import features.main.home.presentation.screens.HomeTab
-import features.main.profile.presentation.screens.ProfileScreen
+import features.main.profile.presentation.screens.ProfileTab
 
 class MainScreen : Screen {
 
@@ -33,7 +33,7 @@ class MainScreen : Screen {
 class MainTabs : Screen {
     @Composable
     override fun Content() {
-        val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileScreen)
+        val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileTab)
         TabNavigator(HomeTab) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
