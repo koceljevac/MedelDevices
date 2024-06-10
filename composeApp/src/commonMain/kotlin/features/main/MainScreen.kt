@@ -12,21 +12,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import features.main.calendar.presentation.screens.CalendarScreen
 import features.main.favorites.presentation.screens.FavoritesScreen
-import features.main.home.presentation.screens.HomeScreen
+import features.main.home.presentation.screens.HomeTab
 import features.main.profile.presentation.screens.ProfileScreen
 
 class MainScreen : Screen {
 
     @Composable
     override fun Content() {
-        val tabs = listOf(HomeScreen, FavoritesScreen, CalendarScreen, ProfileScreen)
-        TabNavigator(HomeScreen) {
+        Navigator(MainTabs())
+    }
+}
+
+class MainTabs : Screen {
+    @Composable
+    override fun Content() {
+        val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileScreen)
+        TabNavigator(HomeTab) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
@@ -57,6 +65,5 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
         label = {
             Text(tab.options.title)
         }
-
     )
 }
