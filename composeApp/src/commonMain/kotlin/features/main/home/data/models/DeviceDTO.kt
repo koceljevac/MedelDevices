@@ -15,6 +15,12 @@ data class DeviceDTO(
     @SerialName("status")
     val status:String,
 
+    @SerialName("description")
+    val description:String,
+
+    @SerialName("price")
+    val price:Float,
+
     @SerialName("category")
     val category:String,
 

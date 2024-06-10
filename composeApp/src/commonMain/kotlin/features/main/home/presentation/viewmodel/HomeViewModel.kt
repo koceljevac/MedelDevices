@@ -8,7 +8,9 @@ import features.main.home.presentation.viewmodel.mvi.HomeSideEffect
 import features.main.home.presentation.viewmodel.mvi.HomeState
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private  val getRemoteDeviceUseCase: GetRemoteDeviceUseCase):ContractViewModel<HomeState,HomeEvent,HomeSideEffect>(HomeState.Initial) {
+class HomeViewModel(
+    private val getRemoteDeviceUseCase: GetRemoteDeviceUseCase
+) : ContractViewModel<HomeState, HomeEvent, HomeSideEffect>(HomeState.Initial) {
 
 
     init {
@@ -30,14 +32,15 @@ class HomeViewModel(private  val getRemoteDeviceUseCase: GetRemoteDeviceUseCase)
                 HomeState.Loading
             }
             try {
+                println("Pokusao")
                 val devices = getRemoteDeviceUseCase()
                 setState {
                     println("Setting state to DevicesLoaded") // Debugging log
                     HomeState.DevicesLoaded(devices)
                 }
             } catch (e: Exception) {
+                println("Setting state to Error with message: ${e.message}") // Debugging log
                 setState {
-                    println("Setting state to Error with message: ${e.message}") // Debugging log
                     HomeState.Error(e.message)
                 }
             }

@@ -6,7 +6,6 @@ import features.main.home.data.repository.DeviceRepositoryImpl
 import features.main.home.domain.repository.DeviceRepository
 import features.main.home.domain.usecase.GetRemoteDeviceUseCase
 import features.main.home.presentation.viewmodel.HomeViewModel
-import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val viewModelModule = module {
@@ -20,5 +19,5 @@ actual val repositoryModule = module {
 }
 actual val apiModule = module {
     single { provideHttpClient() }
-    single { ApiService(get(), "834e-82-117-207-248.ngrok-free.app") }
+    single { ApiService(get(), "https://d97b-82-117-207-248.ngrok-free.app") }
 }

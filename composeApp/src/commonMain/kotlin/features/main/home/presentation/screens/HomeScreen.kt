@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,7 +48,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.ui.components.itemDevice
-import features.main.home.domain.entites.Device
 import features.main.home.presentation.components.ShimmerCard
 import features.main.home.presentation.components.dialogAddDevice
 import features.main.home.presentation.viewmodel.HomeViewModel
@@ -113,19 +114,21 @@ private fun cardSection(
                 }
             }
 
-            is HomeState.DevicesLoaded -> {}
+            is HomeState.DevicesLoaded -> {
+                val devices = state.devices
+                LazyColumn(
+                    contentPadding = PaddingValues(10.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(devices) { device ->
+                        itemDevice(device)
+                    }
+                }
+            }
             HomeState.Initial -> {}
             is HomeState.Error -> {
-                val device: Device = Device(
-                    "21",
-                    "Aparat za pritisak",
-                    "Available",
-                    "Medicinski aparati",
-                    false,
-                    "241FG-31",
-                    "https://www.apoteka-zivanovic.rs/images/2996/800/omron-aparat-za-pritisak-m2-adapter-za-struju-gratis-0.jpg"
-                )
-                itemDevice(device)
+                println("NA EKRANU ERROR")
+                Text("Error")
             }
         }
 
@@ -220,7 +223,7 @@ private fun yourBalanceSection(balance: String) {
                     .size(48.dp)
                     .background(colorScheme.secondary, shape = CircleShape)
             ) {
-                IconButton(onClick = { navigator?.push(PaymentScreen) }, modifier = Modifier.align(Alignment.Center)) {
+                IconButton(onClick = { navigator.push(PaymentScreen) }, modifier = Modifier.align(Alignment.Center)) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
                         contentDescription = "Add",

@@ -13,7 +13,7 @@ class DeviceRepositoryImpl(
 ) : DeviceRepository {
     private lateinit var response: HttpResponse
     override suspend fun getRemoveDevices(): List<Device> {
-        val deviceMapper: DeviceMapper = DeviceMapper()
+        val deviceMapper = DeviceMapper()
         response = apiService.getDevices()
         return when (response.status.value) {
             200 -> {
@@ -21,9 +21,11 @@ class DeviceRepositoryImpl(
                 response.body<List<DeviceDTO>>().forEach { deviceDTO ->
                     deviceList.add(deviceMapper.fromModel(deviceDTO))
                 }
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ${deviceList.size}")
                 deviceList
             }
             else -> {
+                println("Doslo do greske")
                 throw DeviceException("Get all devices failed with status code: ${response.status.value}")
             }
         }

@@ -21,5 +21,5 @@ actual val repositoryModule = module {
 }
 actual val apiModule= module {
     single { provideHttpClient() }
-    single { ApiService(get(), "https://834e-82-117-207-248.ngrok-free.app") }
+    single { ApiService(get(), "https://d97b-82-117-207-248.ngrok-free.app") }
 }
