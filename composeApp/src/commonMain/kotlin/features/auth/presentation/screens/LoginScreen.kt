@@ -14,8 +14,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +29,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import core.utils.validateEmail
 import core.utils.validatePassword
+import features.auth.data.models.UserModel
+import features.auth.domain.entites.UserLogin
+import features.auth.presentation.viewmodel.LoginUserViewModel
+import features.auth.presentation.viewmodel.mvi.LoginEvent
+import features.auth.presentation.viewmodel.mvi.LoginState
+import features.main.MainScreen
+import org.koin.compose.koinInject
 
 object LoginScreen : Screen {
 
@@ -41,8 +48,10 @@ object LoginScreen : Screen {
 
 @Composable
 private fun LoginContent() {
-
+    val viewModel: LoginUserViewModel = koinInject()
+    val state by viewModel.uiState.collectAsState()
     val navigator = LocalNavigator.current
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var emailError by remember { mutableStateOf<String?>(null) }
@@ -65,38 +74,39 @@ private fun LoginContent() {
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth(),
             )
-            if(emailError!=null){
+            if (emailError != null) {
                 Text(text = emailError!!, color = MaterialTheme.colorScheme.error)
-
             }
 
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it
-                                passwordError = validatePassword(it)
+                onValueChange = {
+                    password = it
+                    passwordError = validatePassword(it)
                 },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
-            if(passwordError!=null){
+            if (passwordError != null) {
                 Text(text = passwordError!!, color = MaterialTheme.colorScheme.error)
-
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                          emailError = validateEmail(email)
+                    emailError = validateEmail(email)
                     passwordError = validatePassword(password)
-                    if (emailError==null && passwordError==null){
-
+                    if (emailError == null && passwordError == null) {
+                        viewModel.onEvent(LoginEvent.LoginUser(UserModel(email=email, password = password)))
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Login")
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -110,6 +120,23 @@ private fun LoginContent() {
                         navigator?.push(RegistrationScreen)
                     }
                 )
+            }
+
+            when (state) {
+                is LoginState.Loading -> {
+                    // Show loading indicator
+                }
+                is LoginState.LoginSuccesful -> {
+                    val token = (state as LoginState.LoginSuccesful).jwTokenDto
+                    println("JWT TOKEN $token")
+                    navigator?.replace(MainScreen())
+                }
+                is LoginState.Error -> {
+                    println("Usao je u gresku")
+                    val error = (state as LoginState.Error).message
+                    error?.let { it1 -> Text(text = it1, color = MaterialTheme.colorScheme.error) }
+                }
+                else -> Unit
             }
         }
     }

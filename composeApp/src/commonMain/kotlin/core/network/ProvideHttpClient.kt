@@ -7,17 +7,4 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-fun provideHttpClient() :HttpClient{
-    return HttpClient(CIO){
-        install(DefaultRequest){
-
-        }
-        install(ContentNegotiation){
-            json(Json {
-                prettyPrint =true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
-        }
-    }
-}
+expect fun provideHttpClient(): HttpClient

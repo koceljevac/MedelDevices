@@ -6,10 +6,12 @@ expect val viewModelModule: Module
 expect val useCaseModule: Module
 expect val repositoryModule: Module
 expect val apiModule: Module
+expect val dataStore: Module
 
 fun getSharedModules(): List<Module> = listOf(
     apiModule,
     repositoryModule,
     useCaseModule,
-    viewModelModule
+    viewModelModule,
+    dataStore
 )

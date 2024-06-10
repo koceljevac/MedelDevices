@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import features.main.home.presentation.screens.HomeScreen
 
 object ProfileTab:Tab {
     @Composable

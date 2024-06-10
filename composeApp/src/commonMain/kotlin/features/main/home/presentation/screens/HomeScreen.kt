@@ -1,23 +1,15 @@
-package features.main.home.presentation.screens
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import features.auth.presentation.viewmodel.LoginUserViewModel
+import kotlinproject.composeapp.generated.resources.avatar
 
-import PaymentScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,12 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,16 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import core.ui.components.itemDevice
-import features.main.home.domain.entites.Device
+import features.main.MainScreen
 import features.main.home.presentation.components.ShimmerCard
 import features.main.home.presentation.components.dialogAddDevice
 import features.main.home.presentation.viewmodel.HomeViewModel
 import features.main.home.presentation.viewmodel.mvi.HomeState
 import kotlinproject.composeapp.generated.resources.Res
-import kotlinproject.composeapp.generated.resources.avatar
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 
@@ -63,10 +46,12 @@ class HomeScreen : Screen {
         val state by viewModel.uiState.collectAsState()
         var showDialog by remember { mutableStateOf(false) }
 
-
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = { showDialog = true }) {
+                FloatingActionButton(onClick = {
+                    showDialog = true
+
+                }) {
                     Icon(Icons.Rounded.Add, contentDescription = "Floating action button")
                 }
             },
@@ -77,14 +62,13 @@ class HomeScreen : Screen {
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                userSection(
-                    modifier = Modifier.weight(1f)
-                )
+                userSection(modifier = Modifier.weight(1f))
                 cardSection(
-                    state,
-                    showDialog,
+                    state = state,
+                    showDialog = showDialog,
                     onDismissDialog = { showDialog = false },
-                    modifier = Modifier.weight(3f)
+                    modifier = Modifier
+                        .weight(3f)
                         .background(Color.Red)
                 )
             }
@@ -99,7 +83,6 @@ private fun cardSection(
     onDismissDialog: () -> Unit,
     modifier: Modifier
 ) {
-
     Box(modifier = Modifier.fillMaxSize()) {
         when (state) {
             HomeState.Loading -> {
@@ -112,20 +95,14 @@ private fun cardSection(
                     }
                 }
             }
-
-            is HomeState.DevicesLoaded -> {}
-            HomeState.Initial -> {}
+            is HomeState.DevicesLoaded -> {
+                // Add logic for when devices are loaded
+            }
+            HomeState.Initial -> {
+                // Add logic for initial state
+            }
             is HomeState.Error -> {
-                val device: Device = Device(
-                    "21",
-                    "Aparat za pritisak",
-                    "Available",
-                    "Medicinski aparati",
-                    false,
-                    "241FG-31",
-                    "https://www.apoteka-zivanovic.rs/images/2996/800/omron-aparat-za-pritisak-m2-adapter-za-struju-gratis-0.jpg"
-                )
-                itemDevice(device)
+
             }
         }
 
@@ -220,7 +197,7 @@ private fun yourBalanceSection(balance: String) {
                     .size(48.dp)
                     .background(colorScheme.secondary, shape = CircleShape)
             ) {
-                IconButton(onClick = { navigator?.push(PaymentScreen) }, modifier = Modifier.align(Alignment.Center)) {
+                IconButton(onClick = { navigator.push(PaymentScreen) }, modifier = Modifier.align(Alignment.Center)) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
                         contentDescription = "Add",

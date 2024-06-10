@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.view.model)
             implementation(libs.compose.ui)
+            implementation("androidx.datastore:datastore-preferences:1.1.1")
 
 
 //            implementation(libs.koin.ktor)

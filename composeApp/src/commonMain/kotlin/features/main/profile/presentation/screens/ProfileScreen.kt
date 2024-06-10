@@ -1,6 +1,7 @@
 package features.main.profile.presentation.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +35,7 @@ import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.avatar
 import org.jetbrains.compose.resources.painterResource
 
-class ProfileScreen :Screen {
+class ProfileScreen : Screen {
     @Composable
     override fun Content() {
         Scaffold(modifier = Modifier.fillMaxSize()) {
@@ -46,33 +46,50 @@ class ProfileScreen :Screen {
         }
     }
 }
+
 @Composable
- fun UserInformation(){
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = painterResource(Res.drawable.avatar),
-            contentDescription = "avatar",
-            contentScale = ContentScale.Crop,
+fun UserInformation() {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
             modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-        )
-        Text(
-            text = "Nikola Rankovic",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(
-            text = "=381613068323",
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.Gray
-        )
-        Text(
-            text = "Admin",
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Gray
-        )
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.avatar),
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+            )
+            Text(
+                text = "Nikola Rankovic",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "+381613068323",
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.Gray
+            )
+            Text(
+                text = "Admin",
+                style = MaterialTheme.typography.labelLarge,
+                color = Color.Gray
+            )
+        }
+        IconButton(
+            onClick = { /* Handle logout click */ },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = "Logout")
+        }
     }
 }
+
 @Composable
 fun ProfileMenu() {
     Column(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
@@ -91,6 +108,7 @@ fun ProfileMenu() {
     }
 
 }
+
 @Composable
 fun profileMenuItem(icon: ImageVector, name: String) {
     Card(
