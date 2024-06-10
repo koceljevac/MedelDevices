@@ -17,7 +17,7 @@ import org.koin.dsl.module
 
 actual val viewModelModule = module {
     viewModel { HomeViewModel(get ()) }
-    viewModel { LoginUserViewModel(get ()) }
+    viewModel { LoginUserViewModel(get (), get()) }
 
 }
 actual val useCaseModule = module {

@@ -16,7 +16,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,    private val dataStore: DataStore<Preferences>
+class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,private val dataStore: DataStore<Preferences>
 ) :ContractViewModel<LoginState,LoginEvent,LoginSideEffect>(LoginState.Initial){
     override fun onEvent(event: LoginEvent) {
         when(event){
@@ -24,10 +24,16 @@ class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,    private 
         }
     }
 
-    private suspend fun saveToken(token: String) {
-        val jwtKey = stringPreferencesKey("jwt_token")
-        dataStore.edit { preferences ->
-            preferences[jwtKey] = token
+    private fun loginUser(user: UserModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            setState { LoginState.Loading }
+            try {
+                val token = loginUseCase.invoke(user)
+                saveToken(token.token)
+                setState { LoginState.LoginSuccesful(token) }
+            } catch (e: Exception) {
+                setState { LoginState.Error(e.message ?: "Unknown error") }
+            }
         }
     }
     fun fetchToken(onTokenFetched: (String?) -> Unit) {
@@ -37,24 +43,18 @@ class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,    private 
         }
     }
 
+    private suspend fun saveToken(token: String) {
+        val jwtKey = stringPreferencesKey("jwt_token")
+        dataStore.edit { preferences ->
+            preferences[jwtKey] = token
+        }
+    }
+
     private suspend fun getToken(): String? {
         val jwtKey = stringPreferencesKey("jwt_token")
         val preferences = dataStore.data.first()
         return preferences[jwtKey]
     }
-
-    private fun loginUser(user: UserModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            setState { LoginState.Loading }
-            try {
-                val token = loginUseCase.invoke(user)
-                saveToken(token.token)
-                println("Ovo je moj token $token")
-                setState { LoginState.LoginSuccesful(token) }
-            } catch (e: Exception) {
-                println("Ovo je moja greska ${e.message}")
-                setState { LoginState.Error(e.message ?: "Unknown error") }
-            }
-        }
+    private suspend fun deleteJwtToken(token: String){
     }
 }
