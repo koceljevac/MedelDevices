@@ -30,10 +30,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import core.utils.validateEmail
 import core.utils.validatePassword
 import features.auth.data.models.UserModel
-import features.auth.domain.entites.UserLogin
 import features.auth.presentation.viewmodel.LoginUserViewModel
-import features.auth.presentation.viewmodel.mvi.LoginEvent
-import features.auth.presentation.viewmodel.mvi.LoginState
+import features.auth.presentation.viewmodel.loginViewModel.mvi.LoginEvent
+import features.auth.presentation.viewmodel.loginViewModel.mvi.LoginState
 import features.main.MainScreen
 import org.koin.compose.koinInject
 

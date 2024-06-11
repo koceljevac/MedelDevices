@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +28,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import core.utils.validateEmail
 import core.utils.validatePassword
 import core.utils.validateUsername
+import features.auth.data.models.UserModel
+import features.auth.presentation.viewmodel.registrationViewModel.RegistrationViewModel
+import features.auth.presentation.viewmodel.registrationViewModel.mvi.RegistrationEvent
+import features.auth.presentation.viewmodel.registrationViewModel.mvi.RegistrationState
+import org.koin.compose.koinInject
 
 object RegistrationScreen : Screen {
     @Composable
@@ -36,6 +43,8 @@ object RegistrationScreen : Screen {
 
 @Composable
 private fun registrationContent() {
+    val viewModel: RegistrationViewModel = koinInject()
+    val state by viewModel.uiState.collectAsState()
     val navigator = LocalNavigator.current
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -102,13 +111,26 @@ private fun registrationContent() {
                     passwordError = validatePassword(password)
 
                     if (usernameError == null && emailError == null && passwordError == null) {
-
+                        viewModel.onEvent(RegistrationEvent.RegisterUser(UserModel(username=username,email=email,password=password)))
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Register")
             }
+        }
+        when(state){
+            is RegistrationState.Loading ->{
+                CircularProgressIndicator()
+            }
+            is RegistrationState.RegistrationSuccesful ->{
+                navigator?.replace(LoginScreen)
+
+            }
+            is RegistrationState.Error ->{
+
+            }
+            else ->Unit
         }
     }
 }

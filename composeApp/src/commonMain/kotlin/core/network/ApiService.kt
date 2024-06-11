@@ -1,7 +1,6 @@
 package core.network
 
 import features.auth.data.models.UserModel
-import features.auth.domain.entites.UserLogin
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -19,6 +18,12 @@ class ApiService(private val client: HttpClient, private val baseUrl: String) {
 
     suspend fun loginUser(user: UserModel): HttpResponse {
         return client.post("$baseUrl/api/login") {
+            contentType(ContentType.Application.Json)
+            setBody(user)
+        }
+    }
+    suspend fun registerUser(user: UserModel):HttpResponse{
+        return client.post("$baseUrl/api/register"){
             contentType(ContentType.Application.Json)
             setBody(user)
         }

@@ -1,6 +1,5 @@
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import features.auth.presentation.viewmodel.LoginUserViewModel
 import kotlinproject.composeapp.generated.resources.avatar
 
 import androidx.compose.animation.AnimatedVisibility
@@ -30,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import features.main.MainScreen
 import features.main.home.presentation.components.ShimmerCard
 import features.main.home.presentation.components.dialogAddDevice
 import features.main.home.presentation.viewmodel.HomeViewModel

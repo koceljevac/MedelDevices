@@ -1,4 +1,4 @@
-package features.auth.presentation.viewmodel.mvi
+package features.auth.presentation.viewmodel.loginViewModel.mvi
 
 import core.utils.ViewState
 import features.auth.data.models.JWTokenDto

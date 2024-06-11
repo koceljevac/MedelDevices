@@ -4,7 +4,7 @@ import features.auth.domain.entites.JwtTokenEntity
 import kotlinx.serialization.Serializable
 @Serializable
 data class UserModel(
-    val username:String?="",
+    val username:String?=null,
     val email: String,
     val password:String
 )
