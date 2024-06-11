@@ -154,7 +154,7 @@ private fun cardSection(
             is HomeState.DevicesLoaded -> {
                 val devices = state.devices
                 LazyColumn(
-                    contentPadding = PaddingValues(bottom = 10.dp),
+                    contentPadding = PaddingValues(bottom = 10.dp, start = 10.dp, end = 10.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(devices) { device ->
