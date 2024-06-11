@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import com.example.compose.AppTheme
+import core.datastore.TokenRepository
 import features.auth.presentation.screens.LoginScreen
 import features.auth.presentation.viewmodel.LoginUserViewModel
 import features.main.MainScreen
@@ -22,16 +23,15 @@ import org.koin.compose.koinInject
 @Composable
 fun App() {
     KoinContext {
-        val viewModel: LoginUserViewModel = koinInject()
+        val tokenRepository: TokenRepository = koinInject()
         var initialScreen by remember { mutableStateOf<Screen?>(null) }
 
         LaunchedEffect(Unit) {
-            viewModel.fetchToken { token ->
-                initialScreen = if (token.isNullOrEmpty()) {
-                    LoginScreen
-                } else {
-                    MainScreen()
-                }
+            val token = tokenRepository.getToken()
+            initialScreen = if (token.isNullOrEmpty()) {
+                LoginScreen
+            } else {
+                MainScreen()
             }
         }
 

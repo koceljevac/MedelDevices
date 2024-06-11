@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope
+import core.datastore.TokenRepository
 import core.utils.ContractViewModel
 import features.auth.data.models.UserModel
 import features.auth.domain.usecase.UserLoginUseCase
@@ -16,7 +17,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,private val dataStore: DataStore<Preferences>
+class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,private val tokenRepository: TokenRepository
 ) :ContractViewModel<LoginState,LoginEvent,LoginSideEffect>(LoginState.Initial){
     override fun onEvent(event: LoginEvent) {
         when(event){
@@ -29,32 +30,12 @@ class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,private val 
             setState { LoginState.Loading }
             try {
                 val token = loginUseCase.invoke(user)
-                saveToken(token.token)
+                tokenRepository.saveToken(token.token)
                 setState { LoginState.LoginSuccesful(token) }
             } catch (e: Exception) {
                 setState { LoginState.Error(e.message ?: "Unknown error") }
             }
         }
     }
-    fun fetchToken(onTokenFetched: (String?) -> Unit) {
-        viewModelScope.launch {
-            val token = getToken()
-            onTokenFetched(token)
-        }
-    }
 
-    private suspend fun saveToken(token: String) {
-        val jwtKey = stringPreferencesKey("jwt_token")
-        dataStore.edit { preferences ->
-            preferences[jwtKey] = token
-        }
-    }
-
-    private suspend fun getToken(): String? {
-        val jwtKey = stringPreferencesKey("jwt_token")
-        val preferences = dataStore.data.first()
-        return preferences[jwtKey]
-    }
-    private suspend fun deleteJwtToken(token: String){
-    }
 }
