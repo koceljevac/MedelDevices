@@ -4,4 +4,6 @@ import features.main.home.domain.entites.Device
 
 interface DeviceRepository {
     suspend fun getRemoveDevices(): List<Device>
+
+    suspend fun addDevice(device: Device)
 }
