@@ -31,8 +31,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,13 +48,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.ui.components.itemDevice
+import features.main.home.domain.entites.Device
 import features.main.home.presentation.components.ShimmerCard
 import features.main.home.presentation.components.dialogAddDevice
 import features.main.home.presentation.viewmodel.HomeViewModel
+import features.main.home.presentation.viewmodel.mvi.HomeEvent
+import features.main.home.presentation.viewmodel.mvi.HomeSideEffect
 import features.main.home.presentation.viewmodel.mvi.HomeState
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.avatar
@@ -63,31 +71,59 @@ class HomeScreen : Screen {
         val viewModel: HomeViewModel = koinInject()
         val state by viewModel.uiState.collectAsState()
         var showDialog by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val sideEffect = viewModel.sideEffect.collectAsState(initial = null).value
 
-
-        Scaffold(
-            floatingActionButton = {
-                FloatingActionButton(onClick = { showDialog = true }) {
-                    Icon(Icons.Rounded.Add, contentDescription = "Floating action button")
+        LaunchedEffect(sideEffect) {
+            when (sideEffect) {
+                is HomeSideEffect.ShowMessage -> {
+                    snackbarHostState.showSnackbar(sideEffect.message)
                 }
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                userSection(
-                    modifier = Modifier.weight(1f)
+
+                else -> {}
+            }
+        }
+
+        Box(
+        ) {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter).zIndex(2f)
+            ) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
-                cardSection(
-                    state,
-                    showDialog,
-                    onDismissDialog = { showDialog = false },
-                    modifier = Modifier.weight(3f)
-                        .background(Color.Red)
-                )
+            }
+
+            Scaffold(
+                floatingActionButton = {
+                    FloatingActionButton(onClick = { showDialog = true }) {
+                        Icon(Icons.Rounded.Add, contentDescription = "Floating action button")
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
+                    userSection(
+
+                    )
+                    cardSection(
+                        state,
+                        showDialog,
+                        onSubmitDialog = {
+                            viewModel.onEvent(HomeEvent.AddDevice(device = it))
+                            showDialog = false
+                        },
+                        onDismissDialog = { showDialog = false },
+
+                    )
+                }
             }
         }
     }
@@ -98,7 +134,8 @@ private fun cardSection(
     state: HomeState,
     showDialog: Boolean,
     onDismissDialog: () -> Unit,
-    modifier: Modifier
+    onSubmitDialog: (device: Device) -> Unit,
+
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -117,7 +154,7 @@ private fun cardSection(
             is HomeState.DevicesLoaded -> {
                 val devices = state.devices
                 LazyColumn(
-                    contentPadding = PaddingValues(10.dp),
+                    contentPadding = PaddingValues(bottom = 10.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(devices) { device ->
@@ -125,6 +162,7 @@ private fun cardSection(
                     }
                 }
             }
+
             HomeState.Initial -> {}
             is HomeState.Error -> {
                 println("NA EKRANU ERROR")
@@ -138,14 +176,14 @@ private fun cardSection(
             exit = fadeOut(animationSpec = tween(300))
         ) {
             if (showDialog) {
-                dialogAddDevice(onDismiss = onDismissDialog)
+                dialogAddDevice(onDismiss = onDismissDialog, onSubmit = onSubmitDialog)
             }
         }
     }
 }
 
 @Composable
-private fun userSection(modifier: Modifier) {
+private fun userSection() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,7 +261,10 @@ private fun yourBalanceSection(balance: String) {
                     .size(48.dp)
                     .background(colorScheme.secondary, shape = CircleShape)
             ) {
-                IconButton(onClick = { navigator.push(PaymentScreen) }, modifier = Modifier.align(Alignment.Center)) {
+                IconButton(
+                    onClick = { navigator.push(PaymentScreen) },
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
                         contentDescription = "Add",
