@@ -43,7 +43,7 @@ fun itemDevice(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp),
+            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
         shape = RoundedCornerShape(25.dp),
     ) {
         Surface(
