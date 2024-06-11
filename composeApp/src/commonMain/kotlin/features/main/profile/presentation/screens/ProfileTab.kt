@@ -9,14 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 
-object ProfileTab:Tab {
+
+
+class ProfileTab(val navigator: Navigator): Tab {
     @Composable
     override fun Content() {
-        Navigator(ProfileScreen())
+        ProfileScreenContent(navigator)
     }
 
     override val options: TabOptions
@@ -24,11 +28,11 @@ object ProfileTab:Tab {
         get() {
             val title = "Profile"
             val icon = rememberVectorPainter(Icons.Rounded.Face)
-            return  remember {
+            return remember {
                 TabOptions(
                     index = 3u,
-                    title =title,
-                    icon= icon
+                    title = title,
+                    icon = icon
                 )
             }
         }

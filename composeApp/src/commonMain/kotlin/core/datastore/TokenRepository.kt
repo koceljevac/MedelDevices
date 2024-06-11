@@ -19,16 +19,20 @@ class TokenRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun getToken(): String? {
         return token.first()
     }
-
     suspend fun saveToken(newToken: String) {
         dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = newToken
         }
     }
 
-    suspend fun clearToken() {
-        dataStore.edit { preferences ->
-            preferences.remove(TOKEN_KEY)
+    suspend fun clearToken(): Boolean {
+        return try {
+            dataStore.edit { preferences ->
+                preferences.remove(TOKEN_KEY)
+            }
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 }

@@ -22,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,25 +32,41 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import core.ui.data_lists.getProfileSettingsList
+import features.auth.presentation.screens.LoginScreen
+import features.main.profile.presentation.viewmodel.ProfileViewModel
+import features.main.profile.presentation.viewmodel.mvi.ProfileEvent
+import features.main.profile.presentation.viewmodel.mvi.ProfileState
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.avatar
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
-class ProfileScreen : Screen {
-    @Composable
-    override fun Content() {
-        Scaffold(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                UserInformation()
-                ProfileMenu()
+@Composable
+fun ProfileScreenContent(navigator: Navigator){
+    val viewModel: ProfileViewModel = koinInject()
+    val state by viewModel.uiState.collectAsState()
+
+    Scaffold(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            UserInformation(viewModel)
+            ProfileMenu()
+            when (state) {
+                is ProfileState.LogoutSuccesful -> {
+                    navigator.push(LoginScreen())
+                }
+                else -> Unit
             }
         }
     }
 }
 
+
+
 @Composable
-fun UserInformation() {
+fun UserInformation(viewModel: ProfileViewModel) {
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
@@ -80,7 +98,7 @@ fun UserInformation() {
             )
         }
         IconButton(
-            onClick = { /* Handle logout click */ },
+            onClick = { viewModel.onEvent(ProfileEvent.LogoutUser)},
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp)

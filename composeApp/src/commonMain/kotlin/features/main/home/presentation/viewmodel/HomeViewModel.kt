@@ -6,6 +6,8 @@ import features.main.home.domain.usecase.GetRemoteDeviceUseCase
 import features.main.home.presentation.viewmodel.mvi.HomeEvent
 import features.main.home.presentation.viewmodel.mvi.HomeSideEffect
 import features.main.home.presentation.viewmodel.mvi.HomeState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private  val getRemoteDeviceUseCase: GetRemoteDeviceUseCase):ContractViewModel<HomeState,HomeEvent,HomeSideEffect>(HomeState.Initial) {
@@ -24,7 +26,7 @@ class HomeViewModel(private  val getRemoteDeviceUseCase: GetRemoteDeviceUseCase)
 
 
     private fun loadDevice() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setState {
                 println("Setting state to Loading") // Debugging log
                 HomeState.Loading

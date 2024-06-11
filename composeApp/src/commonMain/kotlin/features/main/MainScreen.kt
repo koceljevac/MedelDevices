@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -22,36 +24,36 @@ import features.main.favorites.presentation.screens.FavoritesScreen
 import features.main.home.presentation.screens.HomeTab
 import features.main.profile.presentation.screens.ProfileTab
 
-class MainScreen : Screen {
+class MainScreen(val navigator: Navigator? =null) : Screen {
 
     @Composable
     override fun Content() {
-        Navigator(MainTabs())
+        val currentNavigator = navigator ?: LocalNavigator.currentOrThrow
+        MainScreenContent(currentNavigator)
+        Text("Main Screen")
     }
 }
-
-class MainTabs : Screen {
-    @Composable
-    override fun Content() {
-        val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileTab)
-        TabNavigator(HomeTab) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    BottomAppBar {
-                        tabs.forEach { tab ->
-                            TabNavigationItem(tab = tab)
-                        }
+@Composable
+private fun MainScreenContent(navigator: Navigator){
+    TabNavigator(HomeTab) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                BottomAppBar {
+                    val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileTab(navigator))
+                    tabs.forEach { tab ->
+                        TabNavigationItem(tab = tab)
                     }
                 }
-            ) { paddingValues ->
-                Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
-                    CurrentTab()
-                }
+            }
+        ) { paddingValues ->
+            Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
+                CurrentTab()
             }
         }
     }
 }
+
 
 @Composable
 private fun RowScope.TabNavigationItem(tab: Tab) {

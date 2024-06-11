@@ -27,6 +27,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import core.utils.validateEmail
 import core.utils.validatePassword
 import features.auth.data.models.UserModel
@@ -36,20 +38,19 @@ import features.auth.presentation.viewmodel.loginViewModel.mvi.LoginState
 import features.main.MainScreen
 import org.koin.compose.koinInject
 
-object LoginScreen : Screen {
+class LoginScreen(val navigator: Navigator? =null) : Screen {
 
     @Composable
     override fun Content() {
-        LoginContent()
+        LoginContent(navigator!!)
     }
 }
 
 
 @Composable
-private fun LoginContent() {
+private fun LoginContent(navigator: Navigator) {
     val viewModel: LoginUserViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
-    val navigator = LocalNavigator.current
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -116,7 +117,7 @@ private fun LoginContent() {
                 ClickableText(
                     text = AnnotatedString("Register"),
                     onClick = {
-                        navigator?.push(RegistrationScreen)
+                        navigator.push(RegistrationScreen)
                     }
                 )
             }
@@ -128,7 +129,7 @@ private fun LoginContent() {
                 is LoginState.LoginSuccesful -> {
                     val token = (state as LoginState.LoginSuccesful).jwTokenDto
                     println("JWT TOKEN $token")
-                    navigator?.replace(MainScreen())
+                    navigator.replace(MainScreen(navigator))
                 }
                 is LoginState.Error -> {
                     println("Usao je u gresku")
