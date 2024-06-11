@@ -14,7 +14,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.example.compose.AppTheme
 import core.datastore.TokenRepository
 import features.auth.presentation.screens.LoginScreen
-import features.auth.presentation.viewmodel.LoginUserViewModel
 import features.main.MainScreen
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject

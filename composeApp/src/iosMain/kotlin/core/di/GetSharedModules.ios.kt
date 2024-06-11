@@ -12,8 +12,6 @@ import features.main.home.data.repository.DeviceRepositoryImpl
 import features.main.home.domain.repository.DeviceRepository
 import features.main.home.domain.usecase.GetRemoteDeviceUseCase
 import features.main.home.presentation.viewmodel.HomeViewModel
-import io.ktor.client.engine.darwin.Darwin
-import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val viewModelModule = module {

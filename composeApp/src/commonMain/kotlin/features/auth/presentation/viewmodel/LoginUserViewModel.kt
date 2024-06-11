@@ -1,9 +1,5 @@
 package features.auth.presentation.viewmodel
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope
 import core.datastore.TokenRepository
 import core.utils.ContractViewModel
@@ -14,7 +10,6 @@ import features.auth.presentation.viewmodel.mvi.LoginSideEffect
 import features.auth.presentation.viewmodel.mvi.LoginState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LoginUserViewModel(private val loginUseCase: UserLoginUseCase,private val tokenRepository: TokenRepository
