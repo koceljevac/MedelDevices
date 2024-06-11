@@ -37,7 +37,7 @@ class RootScreen : Screen {
         }
 
         if (initialScreen != null) {
-            Navigator(initialScreen!!) { navigator ->
+            Navigator(initialScreen!!) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     initialScreen?.Content()
                 }

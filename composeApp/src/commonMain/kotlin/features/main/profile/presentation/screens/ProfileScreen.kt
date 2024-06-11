@@ -32,7 +32,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import core.ui.data_lists.getProfileSettingsList
 import features.auth.presentation.screens.LoginScreen
 import features.main.profile.presentation.viewmodel.ProfileViewModel
@@ -44,9 +46,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 
 @Composable
-fun ProfileScreenContent(navigator: Navigator){
+fun ProfileScreenContent(){
     val viewModel: ProfileViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
+    val navigator = LocalNavigator.currentOrThrow
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -54,7 +57,8 @@ fun ProfileScreenContent(navigator: Navigator){
             ProfileMenu()
             when (state) {
                 is ProfileState.LogoutSuccesful -> {
-                    navigator.push(LoginScreen())
+                    println("pokusao da okinem push na login screen")
+                    navigator.parent?.replace(LoginScreen())
                 }
                 else -> Unit
             }

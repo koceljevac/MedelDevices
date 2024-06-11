@@ -17,10 +17,10 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 
 
 
-class ProfileTab(val navigator: Navigator): Tab {
+class ProfileTab: Tab {
     @Composable
     override fun Content() {
-        ProfileScreenContent(navigator)
+        ProfileScreenContent()
     }
 
     override val options: TabOptions

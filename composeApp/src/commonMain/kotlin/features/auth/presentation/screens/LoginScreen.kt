@@ -38,19 +38,20 @@ import features.auth.presentation.viewmodel.loginViewModel.mvi.LoginState
 import features.main.MainScreen
 import org.koin.compose.koinInject
 
-class LoginScreen(val navigator: Navigator? =null) : Screen {
+class LoginScreen : Screen {
 
     @Composable
     override fun Content() {
-        LoginContent(navigator!!)
+        LoginContent()
     }
 }
 
 
 @Composable
-private fun LoginContent(navigator: Navigator) {
+private fun LoginContent() {
     val viewModel: LoginUserViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
+    val navigator = LocalNavigator.currentOrThrow
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -128,8 +129,8 @@ private fun LoginContent(navigator: Navigator) {
                 }
                 is LoginState.LoginSuccesful -> {
                     val token = (state as LoginState.LoginSuccesful).jwTokenDto
-                    println("JWT TOKEN $token")
-                    navigator.replace(MainScreen(navigator))
+                    //println("JWT TOKEN $token")
+                    navigator.parent?.replace(MainScreen())
                 }
                 is LoginState.Error -> {
                     println("Usao je u gresku")

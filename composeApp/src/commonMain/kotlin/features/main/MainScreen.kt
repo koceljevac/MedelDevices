@@ -24,23 +24,21 @@ import features.main.favorites.presentation.screens.FavoritesScreen
 import features.main.home.presentation.screens.HomeTab
 import features.main.profile.presentation.screens.ProfileTab
 
-class MainScreen(val navigator: Navigator? =null) : Screen {
+class MainScreen() : Screen {
 
     @Composable
     override fun Content() {
-        val currentNavigator = navigator ?: LocalNavigator.currentOrThrow
-        MainScreenContent(currentNavigator)
-        Text("Main Screen")
+        MainScreenContent()
     }
 }
 @Composable
-private fun MainScreenContent(navigator: Navigator){
+private fun MainScreenContent(){
     TabNavigator(HomeTab) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
                 BottomAppBar {
-                    val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileTab(navigator))
+                    val tabs = listOf(HomeTab, FavoritesScreen, CalendarScreen, ProfileTab())
                     tabs.forEach { tab ->
                         TabNavigationItem(tab = tab)
                     }

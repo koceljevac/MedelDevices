@@ -124,7 +124,7 @@ private fun registrationContent() {
                 CircularProgressIndicator()
             }
             is RegistrationState.RegistrationSuccesful ->{
-                navigator?.replace(LoginScreen(navigator))
+                navigator?.replace(LoginScreen())
 
             }
             is RegistrationState.Error ->{
